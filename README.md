@@ -17,20 +17,36 @@ Ce projet s'inscrit dans le cadre du cours **ANI-PJ 4068 : Coder pour la VR, l'X
 ## 📂 Structure du projet  
 ```
 📁 MOTEUR-XR 
-│── 📁 src                # Code source du moteur  
-│   │── main.cpp          # Point d'entrée du programme  
-│   │── Renderer.cpp/.h   # Module de rendu OpenGL  
-│   │── Tracking.cpp/.h   # Module de tracking AR  
-│   │── UI.cpp/.h         # Interface utilisateur avec ImGui  
-│── 📁 include            # Fichiers d'en-tête  
-│── 📁 third_party        # Bibliothèques externes  
-│── 📁 assets             # Modèles 3D et textures  
-│── CMakeLists.txt        # Configuration CMake  
-│── README.md             # Documentation du projet  
-│── CMakeLists.txt
-│── CMakeLists.txt
-│── CMakeLists.txt
-│── CMakeLists.txt
+📁 build                 # Dossier de génération des fichiers de compilation  
+│  
+├─ 📁 external           # Dépendances externes  
+│   ├─ 📁 bin\Premake5   # Outils de génération Premake  
+│   └─ 📁 libs           # Bibliothèques tierces  
+│       ├─ backends      # Backend ImGui  
+│       ├─ Glad2         # Gestion des extensions OpenGL  
+│       ├─ imgui         # Bibliothèque ImGui  
+│       ├─ misc          # Fichiers divers  
+│       └─ SDL3          # Bibliothèque SDL3  
+│  
+├─ 📁 moteur-xr          # Répertoire principal du moteur  
+│   ├─ 📁 src            # Code source  
+│   │   ├─ imgui         # Interfaces utilisateur avec ImGui  
+│   │   └─ moteur-xr.cpp  # Point d'entrée du moteur  
+│   ├─ moteur-xr.vcxproj # Projet Visual Studio  
+│   ├─ moteur-xr.vcxproj.filters # Filtres Visual Studio  
+│   └─ premake5.lua      # Script de configuration Premake  
+│  
+├─ 📁 tools              # Outils de build et de génération  
+├─ build.bat             # Script de compilation  
+├─ gen.bat               # Génération des fichiers de projet  
+├─ run.bat               # Exécution du moteur  
+├─ premake5.lua          # Script de génération Premake  
+└─ .gitignore            # Fichiers à ignorer par Git  
+│  
+├─ imgui.ini             # Fichier de configuration ImGui  
+├─ moteur-xr.sln         # Solution Visual Studio  
+└─ README.md             # Documentation du projet  
+
 ```
 
 ---
