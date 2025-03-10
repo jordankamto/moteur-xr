@@ -24,6 +24,9 @@
 
 #include <string>
 
+// Add a buffer to store input text
+char inputText[256] = "";
+
 // Main code
 int main(int, char**)
 {
@@ -70,7 +73,7 @@ int main(int, char**)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     Uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
-    SDL_Window* window = SDL_CreateWindow("AR Programming", 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow("Moteur-XR", 1280, 720, window_flags);
     if (window == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -96,8 +99,8 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
+    //ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
@@ -157,6 +160,10 @@ int main(int, char**)
                     keyPressed = "P";
                 }
             }
+            // Handle text input events
+            if (event.type == SDL_EVENT_TEXT_INPUT) {
+                strcat(inputText, event.text.text);
+            }
         }
         if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
         {
@@ -193,6 +200,11 @@ int main(int, char**)
             ImGui::Text("counter = %d", counter);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+            // Display the input text in the ImGui window
+            ImGui::InputText("Input", inputText, IM_ARRAYSIZE(inputText));
+            ImGui::Text("You entered: %s", inputText);
+
             ImGui::End();
         }
 
