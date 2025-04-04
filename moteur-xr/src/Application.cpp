@@ -1,6 +1,9 @@
 #include "Application.h"
 #include <string>
 
+// // Add a buffer to store input text
+char inputText[256] = "";
+
 bool Application::Init(){
     return SDLInit() && OpenGLInit() && ImguiInit();
 }
@@ -9,20 +12,14 @@ void Application::Update(){
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
-    bool gameWindow = false; // Variable pour l'ouverture la fenêtre de jeu
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::string keyPressed;
 
-    char buf1[32] = ""; // Variable sui vas contenir le texte entré par le User.
-    std::string inputWorld; // Variable pour recuper le mot saisi
-    std::string correctWorld = "win"; // Variable pour le mot à trouver
-    std::string result; // Resultat de la tentative
-    
-    int mouseX = 0; // position de la souris en x 
-    int mouseY = 0;// position de la souris en y
+    // Main loop
+    bool done = false;
 
     // Main loop
-    while (running)
+    while (!done)
     {
     
         SDL_Event event;
@@ -30,24 +27,20 @@ void Application::Update(){
         {
             ImGui_ImplSDL3_ProcessEvent(&event);
             if (event.type == SDL_EVENT_QUIT)
-                running = true;
+                done = true;
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
-                running = true;
+                done = true;
             if (event.type == SDL_EVENT_KEY_DOWN) {
                 if (event.key.key == SDLK_P) {
-                    keyPressed = "Bonjour je suis SDL3";
+                    keyPressed = "P";
                 }
                 if(event.key.key == SDLK_ESCAPE){
-                    running = true;
+                    done = true;
                 }
             }
-            //Evenement de la souris
-            if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-                // Mettre la position de la souris dans les variables mouseX et mouseY
-                if(event.button.button == SDL_BUTTON_LEFT){
-                    mouseX = event.button.x;
-                    mouseY = event.button.y;
-                }
+            // Handle text input events
+            if (event.type == SDL_EVENT_TEXT_INPUT) {
+                strcat(inputText, event.text.text);
             }
         }
         if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
@@ -75,8 +68,6 @@ void Application::Update(){
             ImGui::Text(keyPressed.c_str());               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &show_another_window);
-            if(ImGui::Button("Launch Game"))
-                gameWindow = true;
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -87,6 +78,11 @@ void Application::Update(){
             ImGui::Text("counter = %d", counter);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
+
+            // Display the input text in the ImGui window
+            ImGui::InputText("Input", inputText, IM_ARRAYSIZE(inputText));
+            ImGui::Text("You entered: %s", inputText);
+
             ImGui::End();
         }
 
@@ -100,31 +96,6 @@ void Application::Update(){
             ImGui::End();
         }
 
-        // 4. Afficher la fenêtre de jeux
-        if(gameWindow){
-            ImGui::Begin("Find The Word", &gameWindow);
-            ImGui::Text("Find the correct word to win.");
-            ImGui::Text("Enter a word");
-            ImGui::InputText("##inputWorld", buf1, 32);
-            ImGui::SameLine();
-            if(ImGui::Button("Check")){
-                inputWorld.append(buf1);
-                if(inputWorld == correctWorld){
-                    result = "You Win !!!";
-                }
-                else{
-                    result = "You Lose, Try again...";
-                }
-                inputWorld = "";
-            }
-            ImGui::Text(result.c_str());
-            ImGui::Text("MouseX : %d", mouseX);
-            ImGui::SameLine();
-            ImGui::Text("MouseY : %d", mouseY);
-            if(ImGui::Button("Close Game"))
-                gameWindow = false;
-            ImGui::End();
-        }
 
         // Rendering
         ImGui::Render();
@@ -157,6 +128,9 @@ bool Application::SDLInit(){
         return -1;
     }
 
+    // Decide GL+GLSL versions
+    // GL 3.0 + GLSL 130
+    // const char* glsl_version = "#version 450";
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -202,8 +176,8 @@ bool Application::ImguiInit(){
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
+    //ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
