@@ -35,4 +35,8 @@
         bool Init();
         void Update();
         void Release();
+        //ajout de getter pour acceder aux variables privées
+        bool getRunning(){return running;}
+        SDL_Window* getWindow(){return window;}
+        ImGuiIO* getIo(){return io;}
  };

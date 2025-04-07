@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "UserInterface.h"
 #include <string>
 
 // // Add a buffer to store input text
@@ -14,9 +15,6 @@ void Application::Update(){
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::string keyPressed;
-
-    // Main loop
-    // bool running = false;
 
     // Main loop
     while (running)
