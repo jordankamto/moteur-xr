@@ -20,7 +20,7 @@
  class Application {
     private:
         SDL_GLContext gl_context = nullptr;
-        SDL_Window *window = nullptr;
+        SDL_Window* window = nullptr;
         bool running = true;
         ImGuiIO* io;
         const char* glsl_version = "#version 450";

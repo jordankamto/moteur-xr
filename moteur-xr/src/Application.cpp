@@ -10,32 +10,30 @@ bool Application::Init(){
 
 void Application::Update(){
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::string keyPressed;
 
     // Main loop
-    bool done = false;
+    // bool running = false;
 
     // Main loop
-    while (!done)
+    while (running)
     {
-    
+        
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL3_ProcessEvent(&event);
             if (event.type == SDL_EVENT_QUIT)
-                done = true;
+                running = false;
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
-                done = true;
+                running = false;
             if (event.type == SDL_EVENT_KEY_DOWN) {
-                if (event.key.key == SDLK_P) {
-                    keyPressed = "P";
-                }
+                
                 if(event.key.key == SDLK_ESCAPE){
-                    done = true;
+                    running = false;
                 }
             }
             // Handle text input events
@@ -48,6 +46,8 @@ void Application::Update(){
             SDL_Delay(10);
             continue;
         }
+
+        // Refactoring imgui interface creation
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -141,7 +141,7 @@ bool Application::SDLInit(){
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     Uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
-    window = SDL_CreateWindow("AR Programming", 1280, 720, window_flags);
+    window = SDL_CreateWindow("Moteur XR", 1280, 720, window_flags);
     if (window == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
