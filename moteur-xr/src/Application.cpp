@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-bool display = false; // Définition de la variable statique
+bool UserInterface::display = false; // Définition de la variable statique
 
 // // Add a buffer to store input text
 char inputText[256] = "";

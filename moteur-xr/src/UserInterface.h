@@ -19,11 +19,12 @@
 
 class UserInterface{
     private:
-        // static bool display; // Ajout du mot-clé static
+        
 
     public:
         UserInterface(){}
         static void InitUI();
         static void DisplayUI();
         static void RenderUI();
+        static bool display;
 };
