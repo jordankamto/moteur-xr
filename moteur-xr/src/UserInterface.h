@@ -19,13 +19,11 @@
 
 class UserInterface{
     private:
-        bool show_demo_window = false;
-        bool show_another_window = false;
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-        std::string keyPressed;
+        // static bool display; // Ajout du mot-clé static
+
     public:
-        UserInterface();
-        ~UserInterface();
-        void init();
-        void update();
+        UserInterface(){}
+        static void InitUI();
+        static void DisplayUI();
+        static void RenderUI();
 };

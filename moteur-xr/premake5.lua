@@ -9,7 +9,7 @@ project "moteur-xr"
     -- files { "%{prj.name}/src/**.cpp", "%{prj.name}/src/**.h" }
     files { "./src/**.cpp", "./src/**.h" }
     includedirs { "./src", libs.imgui.include, libs.glad2.include }
-    links { "Glad2", "Imgui", "opengl32" }
+    links { "Glad2", "Imgui","UserInterface", "opengl32" }
 
     -- Windows (ClangCL)
     filter "system:windows"
