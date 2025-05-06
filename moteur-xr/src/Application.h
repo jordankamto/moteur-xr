@@ -21,7 +21,7 @@
     private:
         SDL_GLContext gl_context = nullptr;
         SDL_Window* window = nullptr;
-        bool running = true;
+        
         ImGuiIO* io;
         const char* glsl_version = "#version 450";
 
@@ -36,7 +36,7 @@
         void Update();
         void Release();
         //ajout de getter pour acceder aux variables privées
-        bool getRunning(){return running;}
+        
         SDL_Window* getWindow(){return window;}
         ImGuiIO* getIo(){return io;}
  };

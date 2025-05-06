@@ -1,43 +1,53 @@
 #include "Application.h"
 #include "UserInterface.h"
+#include "Event.h"
 #include <string>
 #include <iostream>
 
 bool UserInterface::display = false; // Définition de la variable statique
-
+bool running = true;
 // // Add a buffer to store input text
 char inputText[256] = "";
 
-bool Application::Init(){
+bool Application::Init()
+{
     return SDLInit() && OpenGLInit() && ImguiInit();
 }
 
-void Application::Update(){
+void Application::Update()
+{
 
     // Main loop
-     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    Event mainEvent;
+    EventListener EventListener(mainEvent, "EventListener");
+
     while (running)
     {
-        
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            ImGui_ImplSDL3_ProcessEvent(&event);
-            if (event.type == SDL_EVENT_QUIT)
-                running = false;
-            if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
-                running = false;
-            if (event.type == SDL_EVENT_KEY_DOWN) {
-                
-                if(event.key.key == SDLK_ESCAPE){
-                    running = false;
-                }
-            }
-            // Handle text input events
-            if (event.type == SDL_EVENT_TEXT_INPUT) {
-                strcat(inputText, event.text.text);
-            }
-        }
+        // debut de la boucle d'evenement
+        mainEvent.ActivatePollEvent();
+        // SDL_Event event;
+        // while (SDL_PollEvent(&event))
+        // {
+        //     ImGui_ImplSDL3_ProcessEvent(&event);
+        //     if (event.type == SDL_EVENT_QUIT)
+        //         running = false;
+        //     if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
+        //         running = false;
+        //     if (event.type == SDL_EVENT_KEY_DOWN)
+        //     {
+
+        //         if (event.key.key == SDLK_ESCAPE)
+        //         {
+        //             running = false;
+        //         }
+        //     }
+        //     // Handle text input events
+        //     if (event.type == SDL_EVENT_TEXT_INPUT)
+        //     {
+        //         strcat(inputText, event.text.text);
+        //     }
+        // }
         if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
         {
             SDL_Delay(10);
@@ -57,7 +67,8 @@ void Application::Update(){
     }
 }
 
-void Application::Release(){
+void Application::Release()
+{
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
@@ -66,10 +77,10 @@ void Application::Release(){
     SDL_GL_DestroyContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
-
 }
 
-bool Application::SDLInit(){
+bool Application::SDLInit()
+{
 
     // Setup SDL
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD))
@@ -100,7 +111,8 @@ bool Application::SDLInit(){
     return true;
 }
 
-bool Application::OpenGLInit(){
+bool Application::OpenGLInit()
+{
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     gl_context = SDL_GL_CreateContext(window);
     if (gl_context == nullptr)
@@ -115,18 +127,18 @@ bool Application::OpenGLInit(){
     return true;
 }
 
-bool Application::ImguiInit(){
-
+bool Application::ImguiInit()
+{
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     io = &ImGui::GetIO();
-    io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
 
     // Setup Dear ImGui style
-    //ImGui::StyleColorsDark();
+    // ImGui::StyleColorsDark();
     ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
@@ -136,33 +148,87 @@ bool Application::ImguiInit(){
     return true;
 }
 
-void UserInterface::InitUI(){
+void UserInterface::InitUI()
+{
     // Initialisation du frame ImGui
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL3_NewFrame();
-        ImGui::NewFrame();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
+    ImGui::NewFrame();
 }
-void UserInterface::DisplayUI(){
-    //Affichage du contenu de la fenetre
-        ImGui::Begin("Fenetre Imgui");
-        ImGui::Text("BIENVENU SUR LA FENETRE DE SuperAdmin");
-        ImGui::Text("Entrez un texte à afficher dans la console");
-        ImGui::InputText("Console Text", inputText, IM_ARRAYSIZE(inputText));
-        if (ImGui::Button("Save"))
-            std::cout << inputText << std::endl;
-        if(ImGui::Button("Display Window"))
-            if(display){
-                display = false;
-            }
-            else {display = true;}
-        ImGui::End();
+void UserInterface::DisplayUI()
+{
+    // Affichage du contenu de la fenetre
+    ImGui::Begin("Fenetre Imgui");
+    ImGui::Text("BIENVENU SUR LA FENETRE DE SuperAdmin");
+    ImGui::Text("Entrez un texte à afficher dans la console");
+    ImGui::InputText("Console Text", inputText, IM_ARRAYSIZE(inputText));
+    if (ImGui::Button("Save"))
+        std::cout << inputText << std::endl;
+    if (ImGui::Button("Display Window"))
+        if (display)
+        {
+            display = false;
+        }
+        else
+        {
+            display = true;
+        }
+    ImGui::End();
 
-        if(display)
-            {ImGui::Begin("Dummy Window");
-            ImGui::Text("Je suis une fenetre test");
-            ImGui::End();}
+    if (display)
+    {
+        ImGui::Begin("Dummy Window");
+        ImGui::Text("Je suis une fenetre test");
+        ImGui::End();
+    }
 }
-void UserInterface::RenderUI(){
+void UserInterface::RenderUI()
+{
     // Rendering
-        ImGui::Render();
+    ImGui::Render();
+}
+
+void Event::PollEvent()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        for (auto *observer : observers)
+        {
+            observer->OnEvent(event);
+        }
+    }
+}
+
+void Event::ActivatePollEvent()
+{
+    // std::cout << "Activate Poll Event" << std::endl;
+    Event::PollEvent();
+}
+
+void EventListener::OnEvent(const SDL_Event &event)
+{
+
+    ImGui_ImplSDL3_ProcessEvent(&event);
+    if (event.type == SDL_EVENT_QUIT)
+        running = false;
+
+    if (event.type == SDL_EVENT_KEY_DOWN)
+    {
+        std::cout << "Un evenement de type: CLAVIER a ete detecte" << std::endl;
+        if (event.key.key == SDLK_ESCAPE)
+        {
+            running = false;
+        }
+    }
+    else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        std::cout << "Un evenement de type: CLIC_SOURIS a ete detecte" << std::endl;
+    }
+
+    // Handle text input events
+    if (event.type == SDL_EVENT_TEXT_INPUT)
+    {
+        strcat(inputText, event.text.text);
+    }
 }
