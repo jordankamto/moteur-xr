@@ -24,7 +24,7 @@ class UserInterface{
     public:
         UserInterface(){}
         static void InitUI();
-        static void DisplayUI();
+        static void UpdateUI();
         static void RenderUI();
         static bool display;
 };

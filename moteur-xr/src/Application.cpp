@@ -26,28 +26,7 @@ void Application::Update()
     {
         // debut de la boucle d'evenement
         mainEvent.ActivatePollEvent();
-        // SDL_Event event;
-        // while (SDL_PollEvent(&event))
-        // {
-        //     ImGui_ImplSDL3_ProcessEvent(&event);
-        //     if (event.type == SDL_EVENT_QUIT)
-        //         running = false;
-        //     if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
-        //         running = false;
-        //     if (event.type == SDL_EVENT_KEY_DOWN)
-        //     {
 
-        //         if (event.key.key == SDLK_ESCAPE)
-        //         {
-        //             running = false;
-        //         }
-        //     }
-        //     // Handle text input events
-        //     if (event.type == SDL_EVENT_TEXT_INPUT)
-        //     {
-        //         strcat(inputText, event.text.text);
-        //     }
-        // }
         if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
         {
             SDL_Delay(10);
@@ -56,7 +35,7 @@ void Application::Update()
 
         // Refactoring imgui interface creation
         UserInterface::InitUI();
-        UserInterface::DisplayUI();
+        UserInterface::UpdateUI();
         UserInterface::RenderUI();
 
         glViewport(0, 0, (int)io->DisplaySize.x, (int)io->DisplaySize.y);
@@ -139,7 +118,8 @@ bool Application::ImguiInit()
 
     // Setup Dear ImGui style
     // ImGui::StyleColorsDark();
-    ImGui::StyleColorsLight();
+    ImGui::StyleColorsClassic();
+    // ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
@@ -155,32 +135,35 @@ void UserInterface::InitUI()
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 }
-void UserInterface::DisplayUI()
+void UserInterface::UpdateUI()
 {
     // Affichage du contenu de la fenetre
-    ImGui::Begin("Fenetre Imgui");
-    ImGui::Text("BIENVENU SUR LA FENETRE DE SuperAdmin");
-    ImGui::Text("Entrez un texte à afficher dans la console");
-    ImGui::InputText("Console Text", inputText, IM_ARRAYSIZE(inputText));
-    if (ImGui::Button("Save"))
-        std::cout << inputText << std::endl;
-    if (ImGui::Button("Display Window"))
-        if (display)
-        {
-            display = false;
-        }
-        else
-        {
-            display = true;
-        }
-    ImGui::End();
+    // ImGui::Begin("Fenetre Imgui");
+    // ImGui::Text("BIENVENU SUR LA FENETRE DE SuperAdmin");
+    // ImGui::Text("Entrez un texte à afficher dans la console");
+    // ImGui::InputText("Console Text", inputText, IM_ARRAYSIZE(inputText));
+    // if (ImGui::Button("Save"))
+    //     std::cout << inputText << std::endl;
+    // if (ImGui::Button("Display Window"))
+    //     if (display)
+    //     {
+    //         display = false;
+    //     }
+    //     else
+    //     {
+    //         display = true;
+    //     }
+    // ImGui::End();
 
-    if (display)
-    {
-        ImGui::Begin("Dummy Window");
-        ImGui::Text("Je suis une fenetre test");
-        ImGui::End();
-    }
+    // if (display)
+    // {
+    //     ImGui::Begin("Dummy Window");
+    //     ImGui::Text("Je suis une fenetre test");
+    //     ImGui::End();
+    // }
+
+    //Update to the Imgui interface content
+    ImGui::ShowDemoWindow();
 }
 void UserInterface::RenderUI()
 {
